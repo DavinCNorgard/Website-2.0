@@ -1,0 +1,46 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+.nav {
+    background-color: rgb(169, 169, 169);
+    color: whitesmoke;
+    display: flex;
+    justify-content: space-between;
+}
+
+.nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1rem;
+}
+
+.nav li {
+    color: aqua;
+    text-decoration: none;
+    gap: 2rem
+}
+
+.nav li.active {
+    color: aqua;
+    text-decoration: none;
+    gap: 2rem
+}
+
+.nav a {
+    color: aquamarine;
+    text-decoration: none;
+    gap: 2rem
+}
+
+.active {
+    color: aqua;
+}
+
+.inactive {
+    color: bisque;
+}
