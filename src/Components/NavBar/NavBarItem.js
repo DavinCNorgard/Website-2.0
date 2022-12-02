@@ -1,9 +1,11 @@
-import { Link } from "react-router-dom"
+import { Link, useResolvedPath, useMatch } from "react-router-dom"
+import '../../styles.css'
 
 export default function NavBarItem({ to, children, ...props}) {
-    const path = window.location.pathname
+    const resolvedPath = useResolvedPath(to)
+    const isActive = useMatch({path: resolvedPath.pathname, end: true})
     return (
-        <li className={path === to ? "active":"inactive"}>
+        <li className={isActive ? "active" : ""}>
             <Link to={to} {...props}>
                 {children}
             </Link>
