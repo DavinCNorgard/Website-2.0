@@ -1,7 +1,8 @@
-import CircularMotion from "./CircularMotion"
+import CircularMotion from "../../Components/Canvas/CircularMotion"
+import RainDrops from "../../Components/Canvas/RainDrops"
 
 export default function Home() {
     return (<>
-        <CircularMotion numberOfBeads='20' />
+        <RainDrops />
     </>)
 }
