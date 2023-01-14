@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+//contine to follow this work around for react 18 strict mode causing double mount. 
+//https://www.youtube.com/watch?v=MXSuOR2yRvQ
+
 const BeadsCanvas = () => {
   const canvasRef = useRef(null);
   const slider1Ref = useRef(null);
@@ -42,30 +45,43 @@ const BeadsCanvas = () => {
   };
 
   useEffect(() => {
+    console.log("refresh")
     canvasRef.current.width = window.innerWidth - 33;
     canvasRef.current.height = window.innerHeight - 300;
     setNumberOfBeads(slider1Ref.current.value);
     setSpeedOfBeads(slider2Ref.current.value / 10);
     setIndex(slider3Ref.current.value);
     init();
-    window.addEventListener('resize', init, false);
+    //window.addEventListener('resize', init, false);
   }, []);
 
   useEffect(() => {
-    window.addEventListener('mousemove', (event) => {
+    const mousemoveListener = window.addEventListener('mousemove', (event) => {
       mouse.x = event.clientX;
       mouse.y = event.clientY;
     });
-    window.addEventListener('resize', () => {
-        canvasRef.current.width = window.innerWidth - 33;
-        canvasRef.current.height = window.innerHeight - 300;
-        init();
-      });
-      window.addEventListener('click', () => {
-        canvasRef.current.width = window.innerWidth - 33;
-        canvasRef.current.height = window.innerHeight - 300;
-        init();
-      });
+    window.removeEventListener(
+      'mousemove',
+      mousemoveListener
+    )
+    const resizeListener = window.addEventListener('resize', () => {
+      canvasRef.current.width = window.innerWidth - 33;
+      canvasRef.current.height = window.innerHeight - 300;
+      init();
+    });
+    window.removeEventListener(
+      'resize',
+      resizeListener
+    )
+    const clickListener = window.addEventListener('click', () => {
+      canvasRef.current.width = window.innerWidth - 33;
+      canvasRef.current.height = window.innerHeight - 300;
+      init();
+    });
+    window.removeEventListener(
+      'click',
+      clickListener
+    )
     }, []);
   
     const randomArrayColour = (colour) => {
@@ -117,29 +133,29 @@ const BeadsCanvas = () => {
   
     function init() {
         var beadlist = [];
-        for (let i = 0; i < NumberOfBeads; i++) {
+        for (let i = 0; i < 41; i++) {
             const x = canvasRef.current.width / 2;
             const y = canvasRef.current.height / 2;
             const rad = randomIntFrom(1, 3);
             const colour = randomArrayColour(myThemelist[index]);
             beadlist.push(new bead(x, y, rad, colour, index));
         }
-        console.log(beadlist)
+        console.log("init")
         setBeads(beadlist);
         animate();
     }
   
     function animate() {
-        requestAnimationFrame(animate);
-        //c.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-        beads.forEach((b) => {
-            b.update();
-        });
+      requestAnimationFrame(animate);
+      canvasRef.current.getContext('2d').clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      
+      beads.forEach((b) => {
+        b.update();
+      });
     }
   
     return (
       <div>
-        ayayya
         <canvas ref={canvasRef} id='canvas' />
         <input type='range' ref={slider1Ref} id='beads' min='10' max='200' defaultValue='100' onInput={(e) => setNumberOfBeads(e.target.value)} />
         <input type='range' ref={slider2Ref} id='speed' min='1' max='10' defaultValue='5' onInput={(e) => setSpeedOfBeads(e.target.value/10)} />
